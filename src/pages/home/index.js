@@ -1,93 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, Image, TextInput, Dimensions, TouchableOpacity, PermissionsAndroid } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Dimensions, TouchableOpacity, PermissionsAndroid, FlatList, KeyboardAvoidingView, Platform, Keyboard } from 'react-native';
 import Constants from 'expo-constants';
-import * as FileSystem from 'expo-file-system';
 
 // SVG
 import StarSVG from '../../assets/svg/star.svg';
 import ButtomAdd from '../../assets/svg/add.svg';
 import MenuSVG from '../../assets/svg/menu.svg';
 
+import CardTask from '../../components/CardTask';
+
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const taskJson = 'file:///E:/Github/todolist/src/tarefas/tasks.json';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Home = () => {
+
     const [checkList, setCheckList] = useState(false);
-
-    const [taskList, setTaskList] = useState([]);
-
-    useEffect(() => {
-        loadTasks();
-        solicitarPermissaoArquivos();
-    }, []);
-
-    const solicitarPermissaoArquivos = async () => {
-        try {
-            const granted = await PermissionsAndroid.requestMultiple([
-                PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-                PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-            ]);
-
-            if (
-                granted['android.permission.READ_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED &&
-                granted['android.permission.WRITE_EXTERNAL_STORAGE'] === PermissionsAndroid.RESULTS.GRANTED
-            ) {
-                console.log('Permissões concedidas');
-            } else {
-                console.log('Permissões negadas');
-                Alert.alert(
-                    'Permissões necessárias',
-                    'Por favor, conceda permissão para acessar o sistema de arquivos para continuar.',
-                    [{ text: 'OK', onPress: () => console.log('OK Pressed') }],
-                    { cancelable: false }
-                );
-            }
-        } catch (error) {
-            console.error('Erro ao solicitar permissões:', error);
-        }
-    };
-
-    console.log(taskJson);
-
-    const loadTasks = async () => {
-        try {
-            const fileUri = taskJson;
-            const fileContent = await FileSystem.readAsStringAsync(fileUri);
-            const tasks = JSON.parse(fileContent);
-            setTaskList(tasks);
-        } catch (error) {
-            console.error('Erro ao carregar as tarefas:', error);
-        }
-    };
-
-    const addTask = async (taskName) => {
-        try {
-            const newTask = { name: taskName, completed: false };
-            const updatedTasks = [...taskList, newTask];
-            const fileUri = taskJson;
-            await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(updatedTasks));
-            setTaskList(updatedTasks);
-        } catch (error) {
-            console.error('Erro ao adicionar a tarefa:', error);
-        }
-    };
-
-    const toggleTaskCompletion = async (index) => {
-        try {
-            const updatedTasks = [...taskList];
-            updatedTasks[index].completed = !updatedTasks[index].completed;
-            const fileUri = taskJson;
-            await FileSystem.writeAsStringAsync(fileUri, JSON.stringify(updatedTasks));
-            setTaskList(updatedTasks);
-        } catch (error) {
-            console.error('Erro ao alternar a conclusão da tarefa:', error);
-        }
-    };
-
+    const [tasks, setTasks] = useState([]);
+    const [nameTask, setName] = useState('');
+    
+    async function addTask() {
+        setTasks([...tasks, nameTask])
+        setName('');
+        Keyboard.dismiss();
+    }
     return (
-        <View style={styles.viewFull}>
+        <KeyboardAvoidingView
+        keyboardVerticalOffset={0}
+        behavior='padding'
+        enabled={Platform.OS === "ios"}
+        style={styles.viewFull}>
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.headerContext}>
@@ -102,49 +46,34 @@ const Home = () => {
                         <StarSVG width={30} height={30} style={styles.iconStar} />
                     </View>
                     <View style={styles.headerContextCenter}>
-                        <TextInput placeholder="Adicionar tarefa..." placeholderTextColor="rgba(255, 168, 78, 0.5)" style={styles.inputSearch} />
+                        <TextInput
+                            onChangeText={text => setName(text)}
+                            value={nameTask}
+                            placeholder="Adicionar tarefa..." placeholderTextColor="rgba(255, 168, 78, 0.5)" style={styles.inputSearch} />
                     </View>
                     <View style={styles.headerContextCenter}>
                         <ButtomAdd width={50} height={50} style={styles.iconStar}
-                            onPress={() => {
-                                const taskName = "Nome da nova tarefa"; // Aqui você pode pegar o nome da tarefa de um TextInput, por exemplo
-                                addTask(taskName);
-                            }}
+                        onPress={addTask}
                         />
                     </View>
                 </View>
                 <View style={styles.content}>
-                    <View style={styles.cardTask}>
-                        <View style={styles.cardMenu}>
-                            <MenuSVG width={9} height={19} />
-                        </View>
-                        <View>
-                            <Text style={styles.cardText} > Comprar leite e pão no mercado </Text>
+                    <FlatList
+                        data={tasks}
+                        keyExtractor={(item) => item.toString()}
+                        showsVerticalScrollIndicator={false}
 
-                        </View>
-                        <View>
-                            <TouchableOpacity onPress={
-                                () => {
-                                    console.log('tarefa clicada');
-                                    setCheckList(!checkList)
-                                }
-                            }>
-                                {/* <Text style={styles.cardText}>{checkList ? '✔' : '❌'}</Text> */}
-                                {/* <View style={styles.buttomCheckTrue}>
-                                     
-                                </View> */}
-                                <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
-                                
-                                </View>
-                            </TouchableOpacity>
-                        </View>
-                        {taskList &&
-                            console.log(taskList)
-                        }
-                    </View>
-                </View >
+                        renderItem={({ item }) => <CardTask name={item} />}
+
+                    >
+                    </FlatList>
+                </View>
+
+                <Text style={{ color: "white" }} onPress={() => setTasks([])}>
+                    Limpar
+                </Text>
             </View>
-        </View>
+        </KeyboardAvoidingView>
     );
 }
 
