@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: '#2a1e1e'
+        borderColor: '#BE2E5F'
     },
     buttomCheckTrue: {
         justifyContent: 'center',
@@ -248,9 +248,9 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         borderRadius: 25,
-        backgroundColor: '#2a1e1e',
+        backgroundColor: '#BE2E5F',
         borderWidth: 1,
-        borderColor: '#2a1e1e'
+        borderColor: '#BE2E5F'
     },
     verificado: {
         position: 'absolute',
