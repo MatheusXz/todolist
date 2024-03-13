@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     backgroundCard: {
         width: "100%",
         flexDirection: "row",
-        backgroundColor: '#fff',
+        backgroundColor: '#1E1E1E',
     },
     cardTask: {
         flexDirection: "row",
@@ -195,14 +195,14 @@ const styles = StyleSheet.create({
         shadowRadius: 15,
         elevation: 3,
         borderRadius: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#1E1E1E',
         borderWidth: 1,
-        borderColor: '#fff'
+        borderColor: '#1E1E1E'
     },
     cardText: {
         fontSize: 12,
         fontWeight: 'bold',
-        color: '#333337',
+        color: '#fff',
     },
     // 
     cardTextOK: {
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '20%',
         flexDirection: 'column',
-        backgroundColor: "#6801FA",
+        backgroundColor: "#454545",
         height: 58,
         alignItems: "center",
         padding: 15,
@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '20%',
         flexDirection: 'column',
-        backgroundColor: "#E55606",
+        backgroundColor: "#454545",
         height: 58,
         alignItems: "center",
         padding: 15,

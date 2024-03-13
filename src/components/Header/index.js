@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
-import Casamento from '../../assets/svg/casamento.svg';
+import { View, Text, StyleSheet, Image } from "react-native";
+import Profile from '../../assets/svg/profile.svg';
+
+
 
 export default function Header() {
+
+    const ProfileURL = require("../../assets/jpg/nos.jpg")
+
     const [textArray, setTextArray] = useState(
         [
             '"Vós, mulheres, sujeitai-vos a vosso marido, como ao Senhor;"',
@@ -32,10 +37,16 @@ export default function Header() {
         <View style={styles.header}>
             <View style={styles.headerContext}>
                 <View style={styles.headerContextLeft}>
-                    <Text style={styles.headerTextTop}>Missões do</Text>
-                    <Text style={styles.headerTextBottom}>Casamento </Text>
+                    <Text style={styles.headerTextBottom}>Casamento</Text>
+                    <Text style={styles.headerTextTop}>nossas missões! 💑</Text>
                 </View>
-                <Casamento />
+                <View style={styles.headerContextCenter}>
+                    <Image style={styles.foto} source={ProfileURL} 
+                    resizeMode="cover"
+                    />
+                
+                </View>
+
                 {/* Exibe o texto atual */}
             </View>
             <View style={styles.headerContextCenter}>
@@ -49,8 +60,9 @@ export default function Header() {
 const styles = StyleSheet.create({
     header: {
         marginHorizontal: -20,
-        height: 150,
-        backgroundColor: '#250A03',
+        height: 100,
+        backgroundColor: '#1E1E1E',
+        
     },
     headerContext: {
         marginHorizontal: 40,
@@ -72,7 +84,7 @@ const styles = StyleSheet.create({
         alignItems: 'flex-start',
     },
     headerTextTop: {
-        fontSize: 10,
+        fontSize: 12,
         fontWeight: 'bold',
         color: 'white',
         textAlign: 'right',
@@ -81,7 +93,7 @@ const styles = StyleSheet.create({
     headerTextBottom: {
         fontSize: 20,
         fontWeight: 'bold',
-        color: 'white',
+        color: '#E55606',
         textAlign: 'right',
     },
     headerText: {
@@ -94,5 +106,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginHorizontal: 50,
         fontSize: 10,
+    },
+    foto: {
+        width: 60,
+        height: 60,
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 2,
+        borderColor: '#E55606',
     }
 });

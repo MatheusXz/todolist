@@ -4,15 +4,15 @@ import {
     StyleSheet,
     TouchableOpacity,
 } from "react-native";
-import Constants from 'expo-constants';
-import Feather from "@expo/vector-icons/Feather";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function CardsList({ text, bgcolor, textColor, nameIcon, onPress, colorIcon }) {
     return (
         <TouchableOpacity style={[styles.container, { backgroundColor: bgcolor }]} onPress={onPress} >
-            <Feather name={nameIcon} size={40} color={colorIcon} />
+            <Ionicons name={'ellipse'} style={{ position: "absolute", top: 5, right: 8, }} size={10} color={textColor} />
+            <Ionicons name={nameIcon} size={20} color={colorIcon} />
 
-            <Text style={[styles.textCenter, { color: textColor }]}>
+            <Text style={[styles.textCenter, { color: "#fff" }]}>
                 {text}
             </Text>
 
@@ -22,13 +22,18 @@ export default function CardsList({ text, bgcolor, textColor, nameIcon, onPress,
 }
 const styles = StyleSheet.create({
     container: {
-        height: 100,
-        width: 130,
+        height: 60,
+        width: 100,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        gap: 3,        
-        marginTop: Constants.statusBarHeight || 8,
+        elevation: 2,
+        shadowOffset: {
+            width: 10,
+            height: 10,
+        },
+        gap: 2,
+        marginTop: 8,
         borderRadius: 10,
         padding: 10,
     },
@@ -36,8 +41,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontWeight: 'bold',
         marginHorizontal: 10,
-        fontSize: 15,
-        opacity: 0.7,
+        fontSize: 10,
     },
 
 });

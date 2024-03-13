@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     backgroundCard: {
         width: "100%",
         flexDirection: "row",
-        backgroundColor: '#fff',
+        backgroundColor: '#1E1E1E',
     },
     cardTask: {
         flexDirection: "row",
@@ -201,9 +201,9 @@ const styles = StyleSheet.create({
         shadowRadius: 15,
         elevation: 3,
         borderRadius: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#1E1E1E',
         borderWidth: 1,
-        borderColor: '#fff'
+        borderColor: '#1E1E1E'
     },
     cardMenu: {
         justifyContent: "center",
@@ -223,12 +223,12 @@ const styles = StyleSheet.create({
     cardText: {
         fontSize: 12,
         fontWeight: 'bold',
-        color: '#333337',
+        color: '#fff',
     },
     cardTextOK: {
-        fontSize: 10,
+        fontSize: 12,
         fontWeight: '400',
-        color: '#333337',
+        color: '#7300A9',
         fontStyle: 'italic',
         textDecorationLine: 'line-through',
     },
@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
         borderRadius: 25,
         backgroundColor: 'transparent',
         borderWidth: 1,
-        borderColor: '#BE2E5F'
+        borderColor: '#7300A9'
     },
     buttomCheckTrue: {
         justifyContent: 'center',
@@ -248,9 +248,9 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         borderRadius: 25,
-        backgroundColor: '#BE2E5F',
+        backgroundColor: '#7300A9',
         borderWidth: 1,
-        borderColor: '#BE2E5F'
+        borderColor: '#7300A9'
     },
     verificado: {
         position: 'absolute',
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '20%',
         flexDirection: 'column',
-        backgroundColor: "#6801FA",
+        backgroundColor: "#454545",
         height: 58,
         alignItems: "center",
         padding: 15,
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '20%',
         flexDirection: 'column',
-        backgroundColor: "#E55606",
+        backgroundColor: "#454545",
         height: 58,
         alignItems: "center",
         padding: 15,

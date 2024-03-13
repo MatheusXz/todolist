@@ -3,7 +3,8 @@ import {
     StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, ScrollView, Modal, Animated
 } from 'react-native';
 
-import Constants from 'expo-constants';
+
+
 import Ionicons from '@expo/vector-icons/Ionicons';
 // SVG
 
@@ -61,6 +62,13 @@ const Casamento = () => {
             console.error('Erro ao limpar tarefas:', error);
         }
     };
+    const [columns, setColumns] = useState(2); // Estado para armazenar o número de colunas
+
+    // Função para alternar o número de colunas
+    const toggleColumns = () => {
+        const newColumns = columns === 2 ? 1 : 2; // Alterna entre 1 e 2 colunas
+        setColumns(newColumns); // Atualiza o estado de colunas
+    };
 
     // Função para renderizar o componente correspondente ao card selecionado
     const renderizarComponente = () => {
@@ -81,10 +89,42 @@ const Casamento = () => {
                     renderItem={({ item }) => (<Card3 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
                     keyExtractor={item => item.id.toString()} />;
             case 'Card4':
-                return <FlatList
-                    data={tasksCard4}
-                    renderItem={({ item }) => (<Card4 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
-                    keyExtractor={item => item.id.toString()} />;
+                return (
+                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
+                        {tasksCard4.map(item => (
+                            <View key={item.id} style={{ width: '50%', marginBottom: 10 }}>
+                                <Card4
+                                    id={item.id}
+                                    name={item.name}
+                                    completo={item.completed}
+                                    setCompleted={setCompleted}
+                                    editar={setEditar}
+                                    removeTask={() => removeTask(item.id)}
+                                />
+                            </View>
+                        ))}
+                    </View>
+                );
+            // <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+            //     {tasksCard4.map((item, index) => (
+            //         <View keyExtractor={item => item.id.toString()} key={item.id} style={{ width: '40%', margin: 10 }}>
+            //             <Card4
+            //                 id={item.id}
+            //                 name={item.name}
+            //                 completo={item.completed}
+            //                 setCompleted={setCompleted}
+            //                 editar={setEditar}
+            //                 removeTask={() => removeTask(item.id)}
+            //             />
+            //         </View>
+            //     ))}
+            // </View>
+
+
+            // <FlatList
+            //     data={tasksCard4}
+            //     renderItem={({ item }) => (<Card4 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
+            //     keyExtractor={item => item.id.toString()} />;
             case 'Card5':
                 return <FlatList
                     data={tasksCard5}
@@ -320,28 +360,28 @@ const Casamento = () => {
                 <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.listHorizontal}>
                     {/* CARD1 */}
                     <CardsList
-                        text={'Deus nos preparou'}
-                        bgcolor={'#250A03'}
-                        textColor={'#fff'}
+                        text={'Deus'}
+                        bgcolor={'#1E1E1E'}
+                        textColor={'#7300A9'}
                         colorIcon={'#fff'}
-                        nameIcon={'gift'}
+                        nameIcon={'heart-circle'}
                         onPress={() => setComponenteSelecionado('Card1')}
 
                     />
                     {/* CARD2 */}
                     <CardsList
-                        text={'Compras a fazer'}
-                        bgcolor={'#440611'}
-                        textColor={'#fff'}
+                        text={'Compras'}
+                        bgcolor={'#1E1E1E'}
+                        textColor={'#365AEA'}
                         colorIcon={'#fff'}
-                        nameIcon={'shopping-bag'}
+                        nameIcon={'pricetags'}
                         onPress={() => setComponenteSelecionado('Card2')}
                     />
                     {/* CARD2 */}
                     <CardsList
-                        text={'Lista de tarefas'}
-                        bgcolor={'#630C12'}
-                        textColor={'#fff'}
+                        text={'Tarefas'}
+                        bgcolor={'#1E1E1E'}
+                        textColor={'#20E7CF'}
                         colorIcon={'#fff'}
                         nameIcon={'bookmark'}
                         onPress={() => setComponenteSelecionado('Card3')}
@@ -349,26 +389,36 @@ const Casamento = () => {
                     {/* CARD2 */}
                     <CardsList
                         text={'Comprados'}
-                        bgcolor={'#7F0E12'}
-                        textColor={'#fff'}
+                        bgcolor={'#1E1E1E'}
+                        textColor={'#67DB3F'}
                         colorIcon={'#fff'}
-                        nameIcon={'tag'}
+                        nameIcon={'star'}
                         onPress={() => setComponenteSelecionado('Card4')}
                     />
                     {/* CARD2 */}
                     <CardsList
                         text={'Convidados'}
-                        bgcolor={'#AB2830'}
-                        textColor={'#fff'}
+                        bgcolor={'#1E1E1E'}
+                        textColor={'#E55606'}
                         colorIcon={'#fff'}
-                        nameIcon={'check-circle'}
+                        nameIcon={'checkmark-done-circle'}
                         onPress={() => setComponenteSelecionado('Card5')}
                     />
 
 
                 </ScrollView>
+                {componenteSelecionado && componenteSelecionado !== 'Card4' && (
+                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ marginHorizontal: 20, borderRadius: 500 }}>
+                        {renderizarComponente()}
+                    </ScrollView>
+                )}
+                {componenteSelecionado && componenteSelecionado === 'Card4' && (
+                    <View>
+                        {renderizarComponente()}
+                    </View>
+                )}
 
-                {renderizarComponente()}
+
 
             </View>
 
@@ -378,7 +428,7 @@ const Casamento = () => {
                 <TextInput
                     value={novaTarefaNome}
                     onChangeText={text => setNovaTarefaNome(text)}
-                    placeholder="Adicionar produto..."
+                    placeholder="Adicionar item..."
                     placeholderTextColor="rgba(0, 0, 0, 0.5)"
                     style={styles.input}
                 />
@@ -455,17 +505,17 @@ const styles = StyleSheet.create({
     // 
     viewFull: {
         backgroundColor: '#F6F7FB',
-        marginTop: Constants.statusBarHeight || 8,
         flex: 1,
     },
     container: {
         flex: 1,
+
     },
     listHorizontal: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        width: 800,
-        height: innerWidth / 2,
+        width: 600,
+        height: innerWidth / 2.9,
         paddingHorizontal: 20,
     },
 
@@ -502,7 +552,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '20%',
         height: 40,
-        backgroundColor: '#440611',
+        backgroundColor: '#1E1E1E',
         borderRadius: 10,
     },
     list: {

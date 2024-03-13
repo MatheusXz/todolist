@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Modal } from 'react-native';
+import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Modal, ScrollView, Image } from 'react-native';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Swipeable from "react-native-gesture-handler/Swipeable";
@@ -106,250 +106,364 @@ const Card4 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
         setModalVisible(false); // Fechar o modal após a submissão
     };
     return (
-        <GestureHandlerRootView style={[{ flex: 1 }]}>
-            <Swipeable
-                renderLeftActions={LeftActions}
-                renderRightActions={RightActions}
-            >
-                <Animated.View style={[styles.cardTask, cardStyle]}>
-                    <View style={styles.cardMenu}>
-                        <Animated.View style={[styles.buttonContainer, buttonStyle]}>
 
-                            <TouchableOpacity onPress={handleCheck}>
 
-                                <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
 
-                                    {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
 
-                                </View>
-                            </TouchableOpacity>
-                        </Animated.View>
-                    </View>
+            <View style={styles.container}>
+                <View style={styles.header}>
+                    <Image
+                        source={require('../../assets/jpg/nos.jpg')}
+                        style={styles.image}
+                        resizeMode='cover' />
 
-                    <View style={styles.cardBody}>
-                        <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
-                            <FeatherIcon icon='check-circle' size={36} color={'#000'} />
+                </View>
+
+                <View style={styles.body}>
+                    <Text style={styles.textName}>
+                        {name}
+                    </Text>
+                </View>
+
+                <View style={styles.buttons}>
+                    <TouchableOpacity style={styles.btnEdit}>
+                        <Text style={styles.textBtnEdit}>
+                            Edit
                         </Text>
-                    </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.btnRemove}>
+                        <Text style={styles.textBtnRemove}>
+                            Remove
+                        </Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
 
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(false);
-                        }}
-                    >
+        // <GestureHandlerRootView style={[{ flex: 1 }]}>
+        //     <Swipeable
+        //         renderLeftActions={LeftActions}
+        //         renderRightActions={RightActions}
+        //     >
+        //         <Animated.View style={[styles.cardTask, cardStyle]}>
+        //             <View style={styles.cardMenu}>
+        //                 <Animated.View style={[styles.buttonContainer, buttonStyle]}>
 
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>Editar elemento</Text>
-                                <Text style={{ color: 'red' }}>Como estava: {name}</Text>
+        //                     <TouchableOpacity onPress={handleCheck}>
 
-                                <TextInput
-                                    style={styles.input}
-                                    placeholder="Digite o novo nome"
-                                    onChangeText={(text) => setEditedValue(text)}
-                                    value={editedValue}
-                                />
+        //                         <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
 
-                                <View style={styles.buttonContainer}>
+        //                             {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
 
-                                    <TouchableOpacity
-                                        style={[styles.button, styles.confirmButton]}
-                                        onPress={handleSubmitEdit}
-                                    >
-                                        <Text style={styles.buttonText}>Salvar</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={[styles.button, styles.cancelButton]}
-                                        onPress={() => setModalVisible(false)}
-                                    >
-                                        <Text style={styles.buttonText}>Cancelar</Text>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </Modal>
+        //                         </View>
+        //                     </TouchableOpacity>
+        //                 </Animated.View>
+        //             </View>
+
+        //             <View style={styles.cardBody}>
+        //                 <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
+        //                     <FeatherIcon icon='check-circle' size={36} color={'#000'} />
+        //                 </Text>
+        //             </View>
+
+        //             <Modal
+        //                 animationType="slide"
+        //                 transparent={true}
+        //                 visible={modalVisible}
+        //                 onRequestClose={() => {
+        //                     setModalVisible(false);
+        //                 }}
+        //             >
+
+        //                 <View style={styles.centeredView}>
+        //                     <View style={styles.modalView}>
+        //                         <Text style={styles.modalText}>Editar elemento</Text>
+        //                         <Text style={{ color: 'red' }}>Como estava: {name}</Text>
+
+        //                         <TextInput
+        //                             style={styles.input}
+        //                             placeholder="Digite o novo nome"
+        //                             onChangeText={(text) => setEditedValue(text)}
+        //                             value={editedValue}
+        //                         />
+
+        //                         <View style={styles.buttonContainer}>
+
+        //                             <TouchableOpacity
+        //                                 style={[styles.button, styles.confirmButton]}
+        //                                 onPress={handleSubmitEdit}
+        //                             >
+        //                                 <Text style={styles.buttonText}>Salvar</Text>
+        //                             </TouchableOpacity>
+        //                             <TouchableOpacity
+        //                                 style={[styles.button, styles.cancelButton]}
+        //                                 onPress={() => setModalVisible(false)}
+        //                             >
+        //                                 <Text style={styles.buttonText}>Cancelar</Text>
+        //                             </TouchableOpacity>
+        //                         </View>
+        //                     </View>
+        //                 </View>
+        //             </Modal>
 
 
-                </Animated.View>
-            </Swipeable>
-        </GestureHandlerRootView>
+        //         </Animated.View>
+        //     </Swipeable>
+        // </GestureHandlerRootView>
 
     );
 
 }
 
 const styles = StyleSheet.create({
-    backgroundCard: {
-        width: "100%",
-        flexDirection: "row",
-        backgroundColor: '#fff',
-    },
-    cardTask: {
-        flexDirection: "row",
-        width: "100%",
-        height: 58,
-        alignItems: "center",
-        padding: 15,
-        marginVertical: 5,
-        shadowOffset: { width: 10, height: 10 },
-        shadowOpacity: 1,
-        shadowRadius: 15,
-        elevation: 3,
-        borderRadius: 10,
-        backgroundColor: '#fff',
-        borderWidth: 1,
-        borderColor: '#fff'
-    },
-    cardMenu: {
-        justifyContent: "center",
-        alignItems: "start",
-        width: '10%',
-    },
-    cardBody: {
-        justifyContent: "center",
-        alignItems: "start",
-        width: '83%',
-    },
-    cardFooter: {
-        justifyContent: "center",
-        alignItems: "flex-end",
-        width: '7%',
-    },
-    cardText: {
-        fontSize: 12,
-        fontWeight: 'bold',
-        color: '#333337',
-    },
-    cardTextOK: {
-        fontSize: 10,
-        fontWeight: '400',
-        color: '#333337',
-        fontStyle: 'italic',
-        textDecorationLine: 'line-through',
-    },
-    buttomCheck: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 25,
-        height: 25,
-        borderRadius: 25,
-        backgroundColor: 'transparent',
-        borderWidth: 1,
-        borderColor: '#EA5688'
-    },
-    buttomCheckTrue: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: 25,
-        height: 25,
-        borderRadius: 25,
-        backgroundColor: '#EA5688',
-        borderWidth: 1,
-        borderColor: '#EA5688'
-    },
-    verificado: {
-        position: 'absolute',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: 25,
-        height: 25,
-    },
-    leftActions: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '20%',
-        flexDirection: 'column',
-        backgroundColor: "#6801FA",
-        height: 58,
-        alignItems: "center",
-        padding: 15,
-        marginVertical: 5,
-        borderRadius: 10,
-    },
-    leftText: {
-        fontSize: 8,
-        fontWeight: 'bold',
-        color: 'white',
-        textAlign: 'center',
-        opacity: 0.7,
-    },
-    rightActions: {
-        justifyContent: 'center',
-        alignItems: 'center',
-        width: '20%',
-        flexDirection: 'column',
-        backgroundColor: "#E55606",
-        height: 58,
-        alignItems: "center",
-        padding: 15,
-        marginVertical: 5,
-        borderRadius: 10,
-    },
-    rightText: {
-        fontSize: 8,
-        fontWeight: 'bold',
-        color: 'white',
-        textAlign: 'center',
-        opacity: 0.7,
-    },
-    modalView: {
-        width: '90%',
-        margin: 20,
-        backgroundColor: "#333337",
-        borderRadius: 20,
-        padding: 35,
-        alignItems: "center",
-        elevation: 5
-    },
-    modalText: {
-        marginBottom: 15,
-        textAlign: "center",
-        color: "white",
-        fontWeight: "bold",
-        fontSize: 20
-    },
-    buttonContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        width: '100%',
-        marginTop: 10,
-    },
-    button: {
-        borderRadius: 10,
-        paddingVertical: 10,
-        width: '40%',
-    },
-    buttonText: {
-        color: 'white',
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    confirmButton: {
-        backgroundColor: 'green',
-    },
-    cancelButton: {
-        backgroundColor: 'red',
-    },
-    centeredView: {
+    container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: 'rgba(0, 0, 0, 0.7)',
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
+        backgroundColor: '#1E1E1E',
+        borderRadius: 20,
+        height: 200,
         width: '100%',
-        marginBottom: 10,
-        backgroundColor: "#fff",
-        color: '#000',
-        marginTop: 10,
-    }
+        alignItems: 'center',
+
+    },
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        borderRadius: 15,
+
+        padding: 10,
+    },
+    body: {
+
+        justifyContent: 'center',
+        alignItems: 'center',
+        // backgroundColor: 'red',
+        width: '100%',
+        // marginVertical: 5,
+    },
+    image: {
+        justifyContent: 'center',
+        width: '100%',
+        height: 100,
+        borderRadius: 10,
+    },
+    textName: {
+        flexDirection: 'row',
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        color: '#fff',
+    },
+   
+    buttons: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+    },
+    btnEdit: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '40%',
+        height: 30,
+        borderRadius: 10,
+        marginHorizontal: 5,
+        borderWidth: 1,
+        borderColor: '#454545',
+        marginVertical: 5,
+    },
+    btnRemove: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '40%',
+        height: 30,
+        borderRadius: 10,
+        backgroundColor: '#454545',
+        marginVertical: 5,
+    },
+    textBtnEdit: {
+        fontSize: 10,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+    textBtnRemove: {
+        fontSize: 10,
+        fontWeight: 'bold',
+        color: '#fff',
+    },
+
+
+    // backgroundCard: {
+    //     width: "100%",
+    //     flexDirection: "row",
+    //     backgroundColor: '#1E1E1E',
+    // },
+    // cardTask: {
+    //     flexDirection: "row",
+    //     width: "100%",
+    //     height: 58,
+    //     alignItems: "center",
+    //     padding: 15,
+    //     marginVertical: 5,
+    //     shadowOffset: { width: 10, height: 10 },
+    //     shadowOpacity: 1,
+    //     shadowRadius: 15,
+    //     elevation: 3,
+    //     borderRadius: 10,
+    //     backgroundColor: '#1E1E1E',
+    //     borderWidth: 1,
+    //     borderColor: '#1E1E1E'
+    // },
+    // cardMenu: {
+    //     justifyContent: "center",
+    //     alignItems: "start",
+    //     width: '10%',
+    // },
+    // cardBody: {
+    //     justifyContent: "center",
+    //     alignItems: "start",
+    //     width: '83%',
+    // },
+    // cardFooter: {
+    //     justifyContent: "center",
+    //     alignItems: "flex-end",
+    //     width: '7%',
+    // },
+    // cardText: {
+    //     fontSize: 12,
+    //     fontWeight: 'bold',
+    //     color: '#fff',
+    // },
+    // cardTextOK: {
+    //     fontSize: 12,
+    //     fontWeight: '400',
+    //     color: '#67DB3F',
+    //     fontStyle: 'italic',
+    //     textDecorationLine: 'line-through',
+    // },
+    // buttomCheck: {
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     width: 25,
+    //     height: 25,
+    //     borderRadius: 25,
+    //     backgroundColor: 'transparent',
+    //     borderWidth: 1,
+    //     borderColor: '#67DB3F'
+    // },
+    // buttomCheckTrue: {
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     width: 25,
+    //     height: 25,
+    //     borderRadius: 25,
+    //     backgroundColor: '#67DB3F',
+    //     borderWidth: 1,
+    //     borderColor: '#67DB3F'
+    // },
+    // verificado: {
+    //     position: 'absolute',
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     width: 25,
+    //     height: 25,
+    // },
+    // leftActions: {
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     width: '20%',
+    //     flexDirection: 'column',
+    //     backgroundColor: "#454545",
+    //     height: 58,
+    //     alignItems: "center",
+    //     padding: 15,
+    //     marginVertical: 5,
+    //     borderRadius: 10,
+    // },
+    // leftText: {
+    //     fontSize: 8,
+    //     fontWeight: 'bold',
+    //     color: 'white',
+    //     textAlign: 'center',
+    //     opacity: 0.7,
+    // },
+    // rightActions: {
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     width: '20%',
+    //     flexDirection: 'column',
+    //     backgroundColor: "#454545",
+    //     height: 58,
+    //     alignItems: "center",
+    //     padding: 15,
+    //     marginVertical: 5,
+    //     borderRadius: 10,
+    // },
+    // rightText: {
+    //     fontSize: 8,
+    //     fontWeight: 'bold',
+    //     color: 'white',
+    //     textAlign: 'center',
+    //     opacity: 0.7,
+    // },
+    // modalView: {
+    //     width: '90%',
+    //     margin: 20,
+    //     backgroundColor: "#333337",
+    //     borderRadius: 20,
+    //     padding: 35,
+    //     alignItems: "center",
+    //     elevation: 5
+    // },
+    // modalText: {
+    //     marginBottom: 15,
+    //     textAlign: "center",
+    //     color: "white",
+    //     fontWeight: "bold",
+    //     fontSize: 20
+    // },
+    // buttonContainer: {
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     width: '100%',
+    //     marginTop: 10,
+    // },
+    // button: {
+    //     borderRadius: 10,
+    //     paddingVertical: 10,
+    //     width: '40%',
+    // },
+    // buttonText: {
+    //     color: 'white',
+    //     fontWeight: 'bold',
+    //     textAlign: 'center'
+    // },
+    // confirmButton: {
+    //     backgroundColor: 'green',
+    // },
+    // cancelButton: {
+    //     backgroundColor: 'red',
+    // },
+    // centeredView: {
+    //     flex: 1,
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //     backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    // },
+    // input: {
+    //     borderWidth: 1,
+    //     borderColor: '#ccc',
+    //     borderRadius: 5,
+    //     padding: 10,
+    //     width: '100%',
+    //     marginBottom: 10,
+    //     backgroundColor: "#fff",
+    //     color: '#000',
+    //     marginTop: 10,
+    // }
 });
 
 export default Card4;
