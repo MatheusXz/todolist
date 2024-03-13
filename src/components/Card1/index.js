@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Modal } from 'react-native';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -146,14 +146,14 @@ const Card1 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
                                 <Text style={styles.modalText}>Editar elemento</Text>
                                 <Text style={{ color: 'red' }}>Como estava: {name}</Text>
 
-                                <View>
-                                    <TextInput
-                                        style={styles.input}
-                                        placeholder="Digite o novo nome"
-                                        onChangeText={(text) => setEditedValue(text)}
-                                        value={editedValue}
-                                    />
-                                </View>
+
+                                <TextInput
+                                    style={styles.input}
+                                    placeholder="Digite o novo nome"
+                                    onChangeText={(text) => setEditedValue(text)}
+                                    value={editedValue}
+                                />
+
 
                                 <View style={styles.buttonContainer}>
 
@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
         opacity: 0.7,
     },
     modalView: {
+        width: '90%',
         margin: 20,
         backgroundColor: "#333337",
         borderRadius: 20,
@@ -340,6 +341,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
     },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        width: '100%',
+        marginBottom: 10,
+        backgroundColor: "#fff",
+        color: '#000',
+        marginTop: 10,
+    }
 });
 
 export default Card1;

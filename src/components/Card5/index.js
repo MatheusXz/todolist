@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Modal } from 'react-native';
 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -106,78 +106,78 @@ const Card5 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
         setModalVisible(false); // Fechar o modal após a submissão
     };
     return (
-        <GestureHandlerRootView style={[{ flex: 1 }]}>
-            <Swipeable
-                renderLeftActions={LeftActions}
-                renderRightActions={RightActions}
-            >
-                <Animated.View style={[styles.cardTask, cardStyle]}>
-                    <View style={styles.cardMenu}>
-                        <Animated.View style={[styles.buttonContainer, buttonStyle]}>
+        <>
+            <GestureHandlerRootView style={[{ flex: 1 }]}>
+                <Swipeable
+                    renderLeftActions={LeftActions}
+                    renderRightActions={RightActions}
+                >
+                    <Animated.View style={[styles.cardTask, cardStyle]}>
+                        <View style={styles.cardMenu}>
+                            <Animated.View style={[styles.buttonContainer, buttonStyle]}>
 
-                            <TouchableOpacity onPress={handleCheck}>
+                                <TouchableOpacity onPress={handleCheck}>
 
-                                <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
+                                    <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
 
-                                    {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
+                                        {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
 
-                                </View>
-                            </TouchableOpacity>
-                        </Animated.View>
-                    </View>
+                                    </View>
+                                </TouchableOpacity>
+                            </Animated.View>
+                        </View>
 
-                    <View style={styles.cardBody}>
-                        <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
-                            <FeatherIcon icon='check-circle' size={36} color={'#000'} />
-                        </Text>
-                    </View>
+                        <View style={styles.cardBody}>
+                            <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
+                                <FeatherIcon icon='check-circle' size={36} color={'#000'} />
+                            </Text>
+                        </View>
 
-                    <Modal
-                        animationType="slide"
-                        transparent={true}
-                        visible={modalVisible}
-                        onRequestClose={() => {
-                            setModalVisible(false);
-                        }}
-                    >
+                        <Modal
+                            animationType="slide"
+                            transparent={true}
+                            visible={modalVisible}
+                            onRequestClose={() => {
+                                setModalVisible(false);
+                            }}
+                        >
 
-                        <View style={styles.centeredView}>
-                            <View style={styles.modalView}>
-                                <Text style={styles.modalText}>Editar elemento</Text>
-                                <Text style={{ color: 'red' }}>Como estava: {name}</Text>
+                            <View style={styles.centeredView}>
+                                <View style={styles.modalView}>
+                                    <Text style={styles.modalText}>Editar elemento</Text>
+                                    <Text style={{ color: 'red' }}>Como estava: {name}</Text>
 
-                                <View>
                                     <TextInput
                                         style={styles.input}
                                         placeholder="Digite o novo nome"
                                         onChangeText={(text) => setEditedValue(text)}
                                         value={editedValue}
                                     />
-                                </View>
 
-                                <View style={styles.buttonContainer}>
+                                    <View style={styles.buttonContainer}>
 
-                                    <TouchableOpacity
-                                        style={[styles.button, styles.confirmButton]}
-                                        onPress={handleSubmitEdit}
-                                    >
-                                        <Text style={styles.buttonText}>Salvar</Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                        style={[styles.button, styles.cancelButton]}
-                                        onPress={() => setModalVisible(false)}
-                                    >
-                                        <Text style={styles.buttonText}>Cancelar</Text>
-                                    </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.confirmButton]}
+                                            onPress={handleSubmitEdit}
+                                        >
+                                            <Text style={styles.buttonText}>Salvar</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            style={[styles.button, styles.cancelButton]}
+                                            onPress={() => setModalVisible(false)}
+                                        >
+                                            <Text style={styles.buttonText}>Cancelar</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             </View>
-                        </View>
-                    </Modal>
+                        </Modal>
 
 
-                </Animated.View>
-            </Swipeable>
-        </GestureHandlerRootView>
+                    </Animated.View>
+                </Swipeable>
+            </GestureHandlerRootView>
+        </>
 
     );
 
@@ -298,6 +298,7 @@ const styles = StyleSheet.create({
         opacity: 0.7,
     },
     modalView: {
+        width: '90%',
         margin: 20,
         backgroundColor: "#333337",
         borderRadius: 20,
@@ -340,6 +341,17 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: 'rgba(0, 0, 0, 0.7)',
     },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        width: '100%',
+        marginBottom: 10,
+        backgroundColor: "#fff",
+        color: '#000',
+        marginTop: 10,
+    }
 });
 
 export default Card5;

@@ -15,7 +15,7 @@ import Card1 from '../../components/Card1';
 import Card2 from '../../components/Card2';
 import Card3 from '../../components/Card3';
 import Card4 from '../../components/Card4';
-import Card5 from '../../components/Card5';
+import CardConvidados from '../../components/CardConvidados';
 
 const innerWidth = Dimensions.get('window').width;
 const Casamento = () => {
@@ -68,27 +68,27 @@ const Casamento = () => {
             case 'Card1':
                 return <FlatList
                     data={tasksCard1}
-                    renderItem={({ item }) => (<Card1 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} removeTask={() => removeTask(item.id)} />)}
+                    renderItem={({ item }) => (<Card1 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
                     keyExtractor={item => item.id.toString()} />;
             case 'Card2':
                 return <FlatList
                     data={tasksCard2}
-                    renderItem={({ item }) => (<Card2 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} removeTask={() => removeTask(item.id)} />)}
+                    renderItem={({ item }) => (<Card2 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
                     keyExtractor={item => item.id.toString()} />;
             case 'Card3':
                 return <FlatList
                     data={tasksCard3}
-                    renderItem={({ item }) => (<Card3 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} removeTask={() => removeTask(item.id)} />)}
+                    renderItem={({ item }) => (<Card3 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
                     keyExtractor={item => item.id.toString()} />;
             case 'Card4':
                 return <FlatList
                     data={tasksCard4}
-                    renderItem={({ item }) => (<Card4 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} removeTask={() => removeTask(item.id)} />)}
+                    renderItem={({ item }) => (<Card4 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
                     keyExtractor={item => item.id.toString()} />;
             case 'Card5':
                 return <FlatList
                     data={tasksCard5}
-                    renderItem={({ item }) => (<Card5 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} removeTask={() => removeTask(item.id)} />)}
+                    renderItem={({ item }) => (<CardConvidados id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
                     keyExtractor={item => item.id.toString()} />;
             default:
                 return null;
@@ -235,15 +235,12 @@ const Casamento = () => {
     // Função para marcar uma tarefa como completa
     const setCompleted = async (taskId, completed) => {
         try {
-
             if (componenteSelecionado === 'Card1') {
                 updatedTasks = tasksCard1.map(task =>
                     task.id === taskId ? { ...task, completed: completed } : task
                 );
                 setTasksCard1(updatedTasks);
                 await AsyncStorage.setItem('tasksCard1', JSON.stringify(updatedTasks));
-
-
             } else if (componenteSelecionado === 'Card2') {
                 updatedTasks = tasksCard2.map(task =>
                     task.id === taskId ? { ...task, completed: completed } : task
@@ -276,22 +273,18 @@ const Casamento = () => {
     };
     const setEditar = async (taskId, valorNovo) => {
         try {
-
             if (componenteSelecionado === 'Card1') {
                 updatedTasks = tasksCard1.map(task =>
                     task.id === taskId ? { ...task, name: valorNovo } : task
                 );
                 setTasksCard1(updatedTasks);
                 await AsyncStorage.setItem('tasksCard1', JSON.stringify(updatedTasks));
-
-
             } else if (componenteSelecionado === 'Card2') {
                 updatedTasks = tasksCard2.map(task =>
                     task.id === taskId ? { ...task, name: valorNovo } : task
                 );
                 setTasksCard2(updatedTasks);
                 await AsyncStorage.setItem('tasksCard2', JSON.stringify(updatedTasks));
-
             } else if (componenteSelecionado === 'Card3') {
                 updatedTasks = tasksCard3.map(task =>
                     task.id === taskId ? { ...task, name: valorNovo } : task
@@ -375,7 +368,6 @@ const Casamento = () => {
 
                 </ScrollView>
 
-
                 {renderizarComponente()}
 
             </View>
@@ -429,6 +421,38 @@ const Casamento = () => {
 }
 
 const styles = StyleSheet.create({
+
+    // LINHA ONDE TEM O ADD
+    linhaAddCat: {
+        flex: 1,
+        flexDirection: 'column',
+        top: 0,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingTop: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+        height: 40,
+    },
+    buttonAddCat: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 200,
+        height: 80,
+        borderRadius: 20,
+    },
+    textAddCat: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#AB2830',
+        fontSize: 15,
+        fontWeight: 'bold',
+        textAlign: 'center',
+    },
+
+
+    // 
     viewFull: {
         backgroundColor: '#F6F7FB',
         marginTop: Constants.statusBarHeight || 8,

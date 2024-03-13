@@ -4,12 +4,10 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Modal } 
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Swipeable from "react-native-gesture-handler/Swipeable";
 
-import Verificado from "../../assets/svg/verificado.svg"
 import Lixeira from "../../assets/svg/lixeira.svg"
 import Editar from "../../assets/svg/editar.svg"
-import FeatherIcon from "@expo/vector-icons/Feather";
 
-const Card3 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
+const CardConvidados = ({ id, name, removeTask, completo, setCompleted, editar }) => {
     // 
 
     const [modalVisible, setModalVisible] = useState(false);
@@ -115,20 +113,19 @@ const Card3 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
                     <View style={styles.cardMenu}>
                         <Animated.View style={[styles.buttonContainer, buttonStyle]}>
 
-                            <TouchableOpacity onPress={handleCheck}>
+                            {/* <TouchableOpacity onPress={handleCheck}>
 
                                 <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
 
                                     {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
 
                                 </View>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
                         </Animated.View>
                     </View>
 
                     <View style={styles.cardBody}>
                         <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
-                            <FeatherIcon icon='check-circle' size={36} color={'#000'} />
                         </Text>
                     </View>
 
@@ -172,10 +169,9 @@ const Card3 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
                         </View>
                     </Modal>
 
-
                 </Animated.View>
             </Swipeable>
-        </GestureHandlerRootView>
+        </GestureHandlerRootView >
 
     );
 
@@ -203,26 +199,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#fff'
     },
-    cardMenu: {
-        justifyContent: "center",
-        alignItems: "start",
-        width: '10%',
-    },
-    cardBody: {
-        justifyContent: "center",
-        alignItems: "start",
-        width: '83%',
-    },
-    cardFooter: {
-        justifyContent: "center",
-        alignItems: "flex-end",
-        width: '7%',
-    },
     cardText: {
         fontSize: 12,
         fontWeight: 'bold',
         color: '#333337',
     },
+    // 
     cardTextOK: {
         fontSize: 10,
         fontWeight: '400',
@@ -295,6 +277,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         opacity: 0.7,
     },
+    // 
     modalView: {
         width: '90%',
         margin: 20,
@@ -352,4 +335,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Card3;
+export default CardConvidados;

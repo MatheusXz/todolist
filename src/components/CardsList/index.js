@@ -1,14 +1,8 @@
 import React from "react";
 import {
-    View,
     Text,
     StyleSheet,
     TouchableOpacity,
-    Image,
-    Dimensions,
-    KeyboardAvoidingView,
-    Platform,
-    Keyboard,
 } from "react-native";
 import Constants from 'expo-constants';
 import Feather from "@expo/vector-icons/Feather";
