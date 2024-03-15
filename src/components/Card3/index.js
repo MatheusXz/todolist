@@ -188,8 +188,9 @@ const styles = StyleSheet.create({
         backgroundColor: '#1E1E1E',
     },
     cardTask: {
+        alignSelf: "center",
         flexDirection: "row",
-        width: "100%",
+        width: "90%",
         height: 58,
         alignItems: "center",
         padding: 15,

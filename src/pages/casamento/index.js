@@ -1,7 +1,26 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-    StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform, ScrollView, Modal, Animated
+    StyleSheet,
+    Text,
+    View,
+    TextInput,
+    Dimensions,
+    TouchableOpacity,
+    FlatList,
+    KeyboardAvoidingView,
+    Platform,
+    ScrollView,
+    Modal,
+    Animated,
+    Image,
+    Alert,
 } from 'react-native';
+
+
+
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import { requestPermissionsAsync, createAssetAsync } from 'expo-media-library';
 
 
 
@@ -18,11 +37,190 @@ import Card3 from '../../components/Card3';
 import Card4 from '../../components/Card4';
 import CardConvidados from '../../components/CardConvidados';
 
+
+
 const innerWidth = Dimensions.get('window').width;
 const Casamento = () => {
 
+    const [modalVisibleAddFoto, setModalVisibleAddFoto] = useState(false);
+    const [imagemSelecionada, setImagemSelecionada] = useState(null);
+    const [warningTextFoto, setShowWarningTextFoto] = useState(false);
+    const [warningFoto, setShowWarningFoto] = useState(false);
+    const [image, setImage] = useState(null);
 
-    const [campoVazio, setCampoVazio] = useState(false);
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+
+        if (Platform.OS !== 'android') {
+            return true;
+        }
+
+        const { status } = await MediaLibrary.requestPermissionsAsync();
+        if (status !== 'granted') {
+            Alert.alert('Permissão necessária', 'Por favor, conceda permissão para acessar a mídia armazenada.');
+            return false;
+        } else {
+            setShowWarningFoto(false)
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            // console.log(result);
+            // console.log(result.assets[0].uri);
+
+            if (!result.canceled) {
+                setImagemSelecionada(result.assets[0].uri);
+            }
+            return true;
+        }
+
+    };
+
+    const handleAddTaskToCard4 = async () => {
+        if (!novaTarefaNome.trim()) {
+            setShowWarningTextFoto(true);
+            return;
+        }
+
+        // Verifica se a imagem foi selecionada
+        if (!imagemSelecionada) {
+            setShowWarningFoto(true)
+            return;
+        }
+
+        try {
+            // Salva a imagem e obtém o caminho da imagem salva
+            const caminhoImagemSalva = await saveImage(imagemSelecionada);
+            console.log('Caminhdo da Imagem 001 - > ', caminhoImagemSalva)
+            // Adiciona a tarefa com o nome e o caminho da imagem
+            addTaskToCard4(novaTarefaNome, caminhoImagemSalva);
+
+            // Fecha a modal após adicionar a tarefa
+            setModalVisibleAddFoto(false);
+            setImagemSelecionada(null);
+        } catch (error) {
+            console.error('Erro ao salvar a imagem:', error);
+        }
+    };
+
+    const saveImage = async (uri) => {
+        try {
+            const permission = await requestPermissionsAsync();
+
+            if (permission.status === 'granted') {
+                try {
+                    const asset = await MediaLibrary.createAssetAsync(uri);
+                    const album = await MediaLibrary.getAlbumAsync('DCIM');
+
+                    if (album === null) {
+                        await MediaLibrary.createAlbumAsync('DCIM', asset, false);
+                    } else {
+                        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+                    }
+
+                    console.log('Image saved to DCIM folder! ' + asset.uri);
+                    return asset.uri;
+                } catch (error) {
+                    console.error('Error saving image to DCIM folder:', error);
+                }
+            }
+
+        } catch (error) {
+            console.error('Erro ao salvar imagem:', error);
+            throw error;
+        }
+    };
+
+    // Função para carregar a imagem da pasta DCIM
+
+
+
+    // const saveImage = async (uri) => {
+    //     try {
+    //         const asset = await MediaLibrary.createAssetAsync(uri);
+    //         const album = await MediaLibrary.getAlbumAsync('FOTOSREACT');
+
+    //         if (album === null) {
+    //             await MediaLibrary.createAlbumAsync('FOTOSREACT', asset, false);
+    //         } else {
+    //             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+    //         }
+
+    //         console.log('Image saved to FOTOSREACT folder!');
+    //     } catch (error) {
+    //         console.error('Error saving image to FOTOSREACT folder:', error);
+    //     }
+    // };
+
+    // const saveImage = async (uri) => {
+    //     try {
+    //         // Define o diretório onde a imagem será salva (pode ser uma pasta específica do aplicativo)
+    //         const directory = FileSystem.documentDirectory + 'minhaPasta/';
+
+    //         // Garante que o diretório exista
+    //         await FileSystem.makeDirectoryAsync(directory, { intermediates: true });
+
+    //         // Gera um nome único para a imagem (pode usar a data atual, por exemplo)
+    //         const timestamp = new Date().getTime();
+    //         const fileName = `${timestamp}.jpg`;
+
+    //         // Monta o caminho completo do arquivo
+    //         const filePath = directory + fileName;
+
+    //         // Move a imagem para o diretório especificado
+    //         await FileSystem.moveAsync({
+    //             from: uri,
+    //             to: filePath,
+    //         });
+
+    //         console.log('Imagem salva em:', filePath);
+    //     } catch (error) {
+    //         console.error('Erro ao salvar imagem:', error);
+    //     }
+    // };
+
+
+    const handleCloseModal = () => {
+        setModalVisible(false);
+        setModalVisibleAddFoto(false);
+        setNovaTarefaNome('');
+        setImagemSelecionada(null);
+        setShowWarningFoto(false);
+        setShowWarningTextFoto(false)
+    };
+
+    // const handleAddTaskToCard4 = async () => {
+    //     if (!novaTarefaNome.trim()) {
+    //         setShowWarningTextFoto(true);
+    //         return;
+    //     }
+
+    //     // Verifica se a imagem foi selecionada
+    //     if (!imagemSelecionada) {
+    //         setShowWarningFoto(true)
+    //         return;
+    //     }
+
+
+
+    //     try {
+
+    //         addTaskToCard4(novaTarefaNome, caminhoImagemSalva);
+    //         console.log(caminhoImagemSalva);
+
+
+    //         // Fecha a modal após adicionar a tarefa
+    //         setModalVisibleAddFoto(false);
+    //         setImagemSelecionada(null)
+    //     } catch (error) {
+    //         console.error('Erro ao salvar a imagem:', error);
+    //     }
+    // };
+
+
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -64,11 +262,7 @@ const Casamento = () => {
     };
     const [columns, setColumns] = useState(2); // Estado para armazenar o número de colunas
 
-    // Função para alternar o número de colunas
-    const toggleColumns = () => {
-        const newColumns = columns === 2 ? 1 : 2; // Alterna entre 1 e 2 colunas
-        setColumns(newColumns); // Atualiza o estado de colunas
-    };
+
 
     // Função para renderizar o componente correspondente ao card selecionado
     const renderizarComponente = () => {
@@ -90,36 +284,27 @@ const Casamento = () => {
                     keyExtractor={item => item.id.toString()} />;
             case 'Card4':
                 return (
-                    <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
-                        {tasksCard4.map(item => (
-                            <View key={item.id} style={{ width: '50%', marginBottom: 10 }}>
-                                <Card4
-                                    id={item.id}
-                                    name={item.name}
-                                    completo={item.completed}
-                                    setCompleted={setCompleted}
-                                    editar={setEditar}
-                                    removeTask={() => removeTask(item.id)}
-                                />
-                            </View>
-                        ))}
-                    </View>
-                );
-            // <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
-            //     {tasksCard4.map((item, index) => (
-            //         <View keyExtractor={item => item.id.toString()} key={item.id} style={{ width: '40%', margin: 10 }}>
-            //             <Card4
-            //                 id={item.id}
-            //                 name={item.name}
-            //                 completo={item.completed}
-            //                 setCompleted={setCompleted}
-            //                 editar={setEditar}
-            //                 removeTask={() => removeTask(item.id)}
-            //             />
-            //         </View>
-            //     ))}
-            // </View>
+                    <ScrollView horizontal={false} showsVerticalScrollIndicator={true}>
+                        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+                            {tasksCard4.slice().reverse().map((item, index) => ( // Usando slice() para criar uma cópia do array original antes de aplicar reverse()
+                                <View key={item.id} style={{ width: '40%', margin: 10 }}>
+                                    <Card4
+                                        id={item.id}
+                                        name={item.name}
+                                        completo={item.completed}
+                                        setCompleted={setCompleted}
+                                        editar={setEditar}
+                                        removeTask={() => removeTask(item.id)}
+                                        img={item.img}
+                                    />
+                                    {/* <Text>{item.img}</Text> */}
+                                </View>
 
+                            ))}
+                        </View>
+                    </ScrollView>
+
+                );
 
             // <FlatList
             //     data={tasksCard4}
@@ -192,7 +377,7 @@ const Casamento = () => {
 
         // Verifica se o nome da tarefa está vazio
         if (newTask.trim() === '') {
-            setCampoVazio(true);
+
             setShowWarning(true);
             return;
         } else {
@@ -221,9 +406,10 @@ const Casamento = () => {
                         await AsyncStorage.setItem('tasksCard3', JSON.stringify(updatedTasks));
                         break;
                     case 'Card4':
-                        updatedTasks = [...tasksCard4, task];
-                        setTasksCard4(updatedTasks);
-                        await AsyncStorage.setItem('tasksCard4', JSON.stringify(updatedTasks));
+                        { setModalVisibleAddFoto(true) }
+                        // updatedTasks = [...tasksCard4, task];
+                        // setTasksCard4(updatedTasks);
+                        // await AsyncStorage.setItem('tasksCard4', JSON.stringify(updatedTasks));
                         break;
                     case 'Card5':
                         updatedTasks = [...tasksCard5, task];
@@ -234,11 +420,36 @@ const Casamento = () => {
                         break;
                 }
                 setNovaTarefaNome('');
-                setCampoVazio(false);
+
                 setShowWarning(false);
             } catch (error) {
                 console.error('Erro ao adicionar tarefa:', error);
             }
+        }
+    };
+
+    const addTaskToCard4 = async (newTask, imageUri) => {
+        try {
+            const task = {
+                id: Date.now(),
+                name: newTask,
+                completed: 0,
+                img: imageUri, // Armazena a URI da imagem junto com a tarefa
+            };
+            // console.log(task);
+
+
+            const updatedTasks = [...tasksCard4, task];
+            setTasksCard4(updatedTasks);
+            await AsyncStorage.setItem('tasksCard4', JSON.stringify(updatedTasks));
+
+            // console.log(updatedTasks);
+            setNovaTarefaNome('');
+
+            setShowWarning(false);
+            setShowWarningTextFoto(false);
+        } catch (error) {
+            console.error('Erro ao adicionar tarefa ao Card4:', error);
         }
     };
 
@@ -407,16 +618,7 @@ const Casamento = () => {
 
 
                 </ScrollView>
-                {componenteSelecionado && componenteSelecionado !== 'Card4' && (
-                    <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ marginHorizontal: 20, borderRadius: 500 }}>
-                        {renderizarComponente()}
-                    </ScrollView>
-                )}
-                {componenteSelecionado && componenteSelecionado === 'Card4' && (
-                    <View>
-                        {renderizarComponente()}
-                    </View>
-                )}
+                {renderizarComponente()}
 
 
 
@@ -425,16 +627,30 @@ const Casamento = () => {
             {showWarning && <Text>O nome da tarefa não pode estar vazio.</Text>}
 
             <View style={styles.form}>
-                <TextInput
-                    value={novaTarefaNome}
-                    onChangeText={text => setNovaTarefaNome(text)}
-                    placeholder="Adicionar item..."
-                    placeholderTextColor="rgba(0, 0, 0, 0.5)"
-                    style={styles.input}
-                />
-                <TouchableOpacity style={styles.buttonSend} onPress={() => addTask(novaTarefaNome, componenteSelecionado)}>
-                    <Ionicons name="send" size={24} color="#fff" />
-                </TouchableOpacity>
+                {componenteSelecionado &&
+                    componenteSelecionado == 'Card4' ?
+                    (
+                        <TouchableOpacity style={styles.buttonAddFoto} onPress={() => setModalVisibleAddFoto(true)}>
+                            <Ionicons name="add-circle" size={24} color="#fff" />
+                        </TouchableOpacity>
+                    ) : (
+                        <>
+                            <TextInput
+                                value={novaTarefaNome}
+                                onChangeText={text => setNovaTarefaNome(text)}
+                                placeholder="Adicionar item..."
+                                placeholderTextColor="rgba(0, 0, 0, 0.5)"
+                                style={styles.input}
+                            />
+
+                            <TouchableOpacity style={styles.buttonSend} onPress={() => addTask(novaTarefaNome, componenteSelecionado)}>
+                                <Ionicons name="send" size={24} color="#fff" />
+                            </TouchableOpacity>
+                        </>
+                    )
+                }
+
+
             </View>
 
             <Modal
@@ -466,7 +682,82 @@ const Casamento = () => {
                 </View>
             </Modal>
 
-        </KeyboardAvoidingView>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisibleAddFoto}
+                onRequestClose={handleCloseModal}
+            >
+
+                <View style={styles.centeredView}>
+                    <View style={styles.modalViewAddFoto}>
+                        <Text style={styles.modalTextAddFoto}>Adicionando produto</Text>
+
+                        <Text style={{ color: 'gray', marginBottom: 10 }}>
+                            Sua foto do produto aqui
+                        </Text>
+                        {warningTextFoto &&
+                            < Text style={{ color: 'red', marginBottom: 10 }}>
+                                Foto não pode ficar vazia.
+                            </Text>
+                        }
+                        <View style={styles.buttonContainerAddFoto}>
+                            <View style={styles.fotoSelecionada}>
+                                <Image source={{ uri: imagemSelecionada }} style={{ width: '100%', height: '95%', borderWidth: 1, borderColor: '#454545', borderRadius: 20, marginBottom: 10 }} />
+                            </View>
+
+                            <TouchableOpacity
+                                style={[styles.buttonAddFotoModal, { width: '20%', justifyContent: 'center', alignItems: 'center' }]}
+                                onPress={pickImage}
+                            >
+                                <Ionicons name='camera' size={24} color={'white'} />
+                            </TouchableOpacity>
+
+
+
+                        </View>
+                        <Text style={{ color: 'gray', marginBottom: 10 }}>
+                            Nome do seu produto
+                        </Text>
+                        {warningTextFoto &&
+                            <Text style={{ color: 'red', marginBottom: 10 }}>
+                                Nome do produto não pode ficar vazio.
+                            </Text>
+                        }
+
+
+
+                        <TextInput
+                            style={styles.inputAddFoto}
+                            placeholder="Escreva aqui"
+                            onChangeText={setNovaTarefaNome}
+                            value={novaTarefaNome}
+
+                        />
+
+                        <View style={styles.buttonContainerAddFotoBottom}>
+
+                            <TouchableOpacity
+                                style={[styles.buttonCancelAddFoto, styles.cancelButtonAddFoto]}
+                                onPress={handleCloseModal}
+                            >
+                                <Text style={styles.buttonText}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.buttonSalvaAddFoto, styles.confirmButtonAddFoto]}
+                                onPress={handleAddTaskToCard4}
+                            >
+                                <Text style={styles.buttonTextAddFoto}>Salvar</Text>
+                            </TouchableOpacity>
+                        </View>
+
+                    </View>
+                </View>
+            </Modal>
+
+
+
+        </KeyboardAvoidingView >
     );
 }
 
@@ -515,7 +806,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: 600,
-        height: innerWidth / 2.9,
+        height: innerWidth / 4,
         paddingHorizontal: 20,
     },
 
@@ -534,6 +825,7 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#fff',
         flexDirection: 'row',
+        justifyContent: 'center',
         gap: 5,
     },
     input: {
@@ -554,6 +846,33 @@ const styles = StyleSheet.create({
         height: 40,
         backgroundColor: '#1E1E1E',
         borderRadius: 10,
+    },
+    buttonAddFoto: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        alignContent: 'center',
+        width: '40%',
+        height: 40,
+        backgroundColor: '#1E1E1E',
+        borderRadius: 10,
+    },
+    buttonAddFotoModal: {
+        position: 'absolute',
+        justifyContent: 'center',
+        alignItems: 'center',
+        alignSelf: 'center',
+        alignContent: 'center',
+        width: '40%',
+        height: 40,
+        backgroundColor: '#1E1E1E',
+        borderRadius: 10,
+    },
+    buttonSalvaAddFoto: {
+        marginTop: 20,
+        borderRadius: 5,
+        padding: 10,
+        width: '40%',
     },
     list: {
         paddingHorizontal: 20,
@@ -607,6 +926,67 @@ const styles = StyleSheet.create({
     cancelButton: {
         backgroundColor: 'red',
     },
+    modalViewAddFoto: {
+        width: '90%',
+        margin: 20,
+        backgroundColor: "#333337",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        elevation: 5
+    },
+    modalTextAddFoto: {
+        marginBottom: 15,
+        textAlign: "center",
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20
+    },
+    buttonContainerAddFotoBottom: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    buttonContainerAddFoto: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        width: '100%',
+    },
+    fotoSelecionada: {
+        flexDirection: 'row',
+        width: '100%',
+        height: 200,
+
+    },
+    buttonTextAddFoto: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    buttonCancelAddFoto: {
+        marginTop: 20,
+        borderRadius: 5,
+        padding: 10,
+        width: '40%',
+    },
+    confirmButtonAddFoto: {
+        backgroundColor: 'green',
+    },
+    cancelButtonAddFoto: {
+        backgroundColor: 'red',
+    },
+
+    inputAddFoto: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        width: '100%',
+        marginBottom: 10,
+        backgroundColor: "#fff",
+        color: '#000',
+        marginTop: 10,
+    }
 
 
 

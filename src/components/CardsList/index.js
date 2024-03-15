@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
+        
         elevation: 2,
         shadowOffset: {
             width: 10,
@@ -35,7 +36,6 @@ const styles = StyleSheet.create({
         gap: 2,
         marginTop: 8,
         borderRadius: 10,
-        padding: 10,
     },
     textCenter: {
         textAlign: 'center',

@@ -1,31 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated, Modal, ScrollView, Image } from 'react-native';
 
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Swipeable from "react-native-gesture-handler/Swipeable";
 
-import Verificado from "../../assets/svg/verificado.svg"
-import Lixeira from "../../assets/svg/lixeira.svg"
-import Editar from "../../assets/svg/editar.svg"
-import FeatherIcon from "@expo/vector-icons/Feather";
+// import { GestureHandlerRootView } from 'react-native-gesture-handler';
+// import Swipeable from "react-native-gesture-handler/Swipeable";
 
-const Card4 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
+// import Verificado from "../../assets/svg/verificado.svg"
+// import Lixeira from "../../assets/svg/lixeira.svg"
+// import Editar from "../../assets/svg/editar.svg"
+// import FeatherIcon from "@expo/vector-icons/Feather";
+
+const Card4 = ({ id, name, removeTask, editar, img }) => {
     // 
 
     const [modalVisible, setModalVisible] = useState(false);
     const [editedValue, setEditedValue] = useState(name);
-
-    const [checkList, setCheckList] = useState(completo === 1);
-
     const [animation] = useState(new Animated.Value(0));
 
+
+
+    
+
     useEffect(() => {
-        // Animação de entrada
         Animated.spring(animation, {
             toValue: 1,
             useNativeDriver: true,
         }).start();
     }, []);
+
+    const handleRemove = () => {
+        Animated.timing(animation, {
+            toValue: -1,
+            duration: 500,
+            useNativeDriver: true,
+        }).start(() => {
+            removeTask(id);
+        });
+    };
 
     const cardStyle = {
         transform: [
@@ -35,180 +46,128 @@ const Card4 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
                     outputRange: [0.5, 1],
                 }),
             },
-        ],
-    };
-
-    const buttonStyle = {
-        transform: [
             {
-
                 translateX: animation.interpolate({
                     inputRange: [0, 1],
-                    outputRange: [-100, 0],
+                    outputRange: [-200, 0], // Iniciar o cartão 200 unidades para a esquerda e trazer de volta para a posição original
                 }),
-
             },
         ],
     };
 
-    function LeftActions(progress, dragX) {
-
-        const scale = dragX.interpolate({
-            inputRange: [0, 100],
-            outputRange: [0.5, 1],
-            extrapolate: 'clamp',
-        })
-
-        return (
-            <TouchableOpacity onPress={handleEdit} style={[styles.leftActions, { transform: [{ scale }] }]}>
-                <Animated.View>
-
-                    <Editar width={27} height={25} />
-                    <Text style={styles.leftText}>Editar</Text>
-
-                </Animated.View>
-            </TouchableOpacity>
-        )
-
-    }
-    function RightActions(progress, dragX) {
-        const scale = dragX.interpolate({
-            inputRange: [-100, 0],
-            outputRange: [1, .9], // Invertendo a escala inicial e final
-            extrapolate: 'clamp',
-        });
-
-        return (
-            <Animated.View style={[styles.rightActions, { transform: [{ scale }] }]}>
-                <TouchableOpacity onPress={() => removeTask(id)}>
-                    <Animated.View style={{ flexDirection: 'row', alignItems: 'center', transform: [{ scale }] }}>
-                        <Lixeira width={20} height={24} />
-                        <Animated.Text style={[styles.rightText, { transform: [{ scale }] }]}>Apagar</Animated.Text>
-                    </Animated.View>
-                </TouchableOpacity>
-            </Animated.View>
-        );
-    }
-
-    const handleCheck = () => {
-        setCheckList(!checkList);
-        setCompleted(id, checkList ? 0 : 1);
-    };
 
     const handleEdit = () => {
         setModalVisible(true);
     };
 
+
+
     const handleSubmitEdit = () => {
         // Aqui você pode lidar com a submissão da edição, por exemplo:
         editar(id, editedValue)
-        console.log(`Valor editado: ${editedValue}`);
+        // console.log(`Valor editado: ${editedValue}`);
         setModalVisible(false); // Fechar o modal após a submissão
     };
+
+
+
+
+
+
     return (
 
 
 
+        <Animated.View style={[styles.container, cardStyle]}>
+            <View style={styles.header}>
+                <Image
+                    source={{ uri: img }}
+                    style={[styles.image,]}
+                    resizeMode='cover' />
 
-            <View style={styles.container}>
-                <View style={styles.header}>
-                    <Image
-                        source={require('../../assets/jpg/nos.jpg')}
-                        style={styles.image}
-                        resizeMode='cover' />
 
-                </View>
-
-                <View style={styles.body}>
-                    <Text style={styles.textName}>
-                        {name}
-                    </Text>
-                </View>
-
-                <View style={styles.buttons}>
-                    <TouchableOpacity style={styles.btnEdit}>
-                        <Text style={styles.textBtnEdit}>
-                            Edit
-                        </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btnRemove}>
-                        <Text style={styles.textBtnRemove}>
-                            Remove
-                        </Text>
-                    </TouchableOpacity>
-                </View>
             </View>
 
-        // <GestureHandlerRootView style={[{ flex: 1 }]}>
-        //     <Swipeable
-        //         renderLeftActions={LeftActions}
-        //         renderRightActions={RightActions}
-        //     >
-        //         <Animated.View style={[styles.cardTask, cardStyle]}>
-        //             <View style={styles.cardMenu}>
-        //                 <Animated.View style={[styles.buttonContainer, buttonStyle]}>
+            <View style={styles.body}>
+                <Text>
+                    {img}
+                </Text>
+                <Text style={styles.textName} numberOfLines={2} ellipsizeMode="tail">
+                    {name} - {id}
+                </Text>
+            </View>
+            {console.log(img)}
+            {console.log(id)}
+            {console.log(name)}
+            <View style={styles.buttons}>
+                <TouchableOpacity style={styles.btnEdit} onPress={handleEdit}>
+                    <Text style={styles.textBtnEdit} >
+                        Edit
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.btnRemove} onPress={handleRemove}>
+                    <Text style={styles.textBtnRemove}>
+                        Remove
+                    </Text>
+                </TouchableOpacity>
+            </View>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}
+            >
 
-        //                     <TouchableOpacity onPress={handleCheck}>
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>Editar elemento</Text>
 
-        //                         <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
-
-        //                             {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
-
-        //                         </View>
-        //                     </TouchableOpacity>
-        //                 </Animated.View>
-        //             </View>
-
-        //             <View style={styles.cardBody}>
-        //                 <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
-        //                     <FeatherIcon icon='check-circle' size={36} color={'#000'} />
-        //                 </Text>
-        //             </View>
-
-        //             <Modal
-        //                 animationType="slide"
-        //                 transparent={true}
-        //                 visible={modalVisible}
-        //                 onRequestClose={() => {
-        //                     setModalVisible(false);
-        //                 }}
-        //             >
-
-        //                 <View style={styles.centeredView}>
-        //                     <View style={styles.modalView}>
-        //                         <Text style={styles.modalText}>Editar elemento</Text>
-        //                         <Text style={{ color: 'red' }}>Como estava: {name}</Text>
-
-        //                         <TextInput
-        //                             style={styles.input}
-        //                             placeholder="Digite o novo nome"
-        //                             onChangeText={(text) => setEditedValue(text)}
-        //                             value={editedValue}
-        //                         />
-
-        //                         <View style={styles.buttonContainer}>
-
-        //                             <TouchableOpacity
-        //                                 style={[styles.button, styles.confirmButton]}
-        //                                 onPress={handleSubmitEdit}
-        //                             >
-        //                                 <Text style={styles.buttonText}>Salvar</Text>
-        //                             </TouchableOpacity>
-        //                             <TouchableOpacity
-        //                                 style={[styles.button, styles.cancelButton]}
-        //                                 onPress={() => setModalVisible(false)}
-        //                             >
-        //                                 <Text style={styles.buttonText}>Cancelar</Text>
-        //                             </TouchableOpacity>
-        //                         </View>
-        //                     </View>
-        //                 </View>
-        //             </Modal>
+                        <Text style={{ color: '#ffffff', }}>
+                            foto
+                        </Text>
+                        {/* <Image source={{ uri: image }} style={{ width: '100%', height: '50%', borderWidth: 1, borderColor: '#454545', borderRadius: 20, marginBottom: 20 }} /> */}
 
 
-        //         </Animated.View>
-        //     </Swipeable>
-        // </GestureHandlerRootView>
+                        <Text style={{ color: '#ffffff', }}>
+                            nome do item
+                        </Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite o novo nome"
+                            onChangeText={(text) => setEditedValue(text)}
+                            value={editedValue}
+                        />
+
+                        <View style={styles.buttonContainer}>
+
+                            <TouchableOpacity
+                                style={[styles.button, styles.confirmButton]}
+                            // onPress={pickImage}
+                            >
+
+                                <Text style={styles.buttonText}>Colocar foto</Text>
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity
+                                style={[styles.button, styles.confirmButton]}
+                                onPress={handleSubmitEdit}
+                            >
+                                <Text style={styles.buttonText}>Salvar</Text>
+                            </TouchableOpacity> */}
+                            <TouchableOpacity
+                                style={[styles.button, styles.cancelButton]}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.buttonText}>Cancelar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
+        </Animated.View>
+
+
 
     );
 
@@ -216,12 +175,12 @@ const Card4 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#1E1E1E',
         borderRadius: 20,
-        height: 200,
+        height: 210,
         width: '100%',
         alignItems: 'center',
+        elevation: 8
 
     },
     header: {
@@ -230,16 +189,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: '100%',
         borderRadius: 15,
-
         padding: 10,
     },
     body: {
 
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'red',
         width: '100%',
-        // marginVertical: 5,
     },
     image: {
         justifyContent: 'center',
@@ -254,35 +210,32 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         justifyContent: 'center',
         alignItems: 'center',
-        width: '100%',
+        width: '85%',
+        height: 50,
         color: '#fff',
     },
-   
     buttons: {
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        width: '100%',
+        width: '90%',
     },
     btnEdit: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '40%',
+        width: '45%',
         height: 30,
         borderRadius: 10,
-        marginHorizontal: 5,
         borderWidth: 1,
         borderColor: '#454545',
-        marginVertical: 5,
     },
     btnRemove: {
         justifyContent: 'center',
         alignItems: 'center',
-        width: '40%',
+        width: '45%',
         height: 30,
         borderRadius: 10,
         backgroundColor: '#454545',
-        marginVertical: 5,
     },
     textBtnEdit: {
         fontSize: 10,
@@ -294,7 +247,115 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: '#fff',
     },
+    modalView: {
+        width: '90%',
+        margin: 20,
+        backgroundColor: "#333337",
+        borderRadius: 20,
+        padding: 35,
+        alignItems: "center",
+        elevation: 5
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center",
+        color: "white",
+        fontWeight: "bold",
+        fontSize: 20
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginTop: 10,
+    },
+    button: {
+        borderRadius: 10,
+        paddingVertical: 10,
+        width: '40%',
+    },
+    buttonText: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    confirmButton: {
+        backgroundColor: 'green',
+    },
+    cancelButton: {
+        backgroundColor: 'red',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        width: '100%',
+        marginBottom: 10,
+        backgroundColor: "#fff",
+        color: '#000',
+        marginTop: 10,
+    }
 
+
+
+    // const buttonStyle = {
+    //     transform: [
+    //         {
+
+    //             translateX: animation.interpolate({
+    //                 inputRange: [0, 1],
+    //                 outputRange: [-100, 0],
+    //             }),
+
+    //         },
+    //     ],
+    // };
+
+    // function LeftActions(progress, dragX) {
+
+    //     const scale = dragX.interpolate({
+    //         inputRange: [0, 100],
+    //         outputRange: [0.5, 1],
+    //         extrapolate: 'clamp',
+    //     })
+
+    //     return (
+    //         <TouchableOpacity onPress={handleEdit} style={[styles.leftActions, { transform: [{ scale }] }]}>
+    //             <Animated.View>
+
+    //                 <Editar width={27} height={25} />
+    //                 <Text style={styles.leftText}>Editar</Text>
+
+    //             </Animated.View>
+    //         </TouchableOpacity>
+    //     )
+
+    // }
+    // function RightActions(progress, dragX) {
+    //     const scale = dragX.interpolate({
+    //         inputRange: [-100, 0],
+    //         outputRange: [1, .9], // Invertendo a escala inicial e final
+    //         extrapolate: 'clamp',
+    //     });
+
+    //     return (
+    //         <Animated.View style={[styles.rightActions, { transform: [{ scale }] }]}>
+    //             <TouchableOpacity onPress={() => removeTask(id)}>
+    //                 <Animated.View style={{ flexDirection: 'row', alignItems: 'center', transform: [{ scale }] }}>
+    //                     <Lixeira width={20} height={24} />
+    //                     <Animated.Text style={[styles.rightText, { transform: [{ scale }] }]}>Apagar</Animated.Text>
+    //                 </Animated.View>
+    //             </TouchableOpacity>
+    //         </Animated.View>
+    //     );
+    // }
 
     // backgroundCard: {
     //     width: "100%",
@@ -464,6 +525,84 @@ const styles = StyleSheet.create({
     //     color: '#000',
     //     marginTop: 10,
     // }
+
+
+
+
+
+
+
+
+    // <GestureHandlerRootView style={[{ flex: 1 }]}>
+    //     <Swipeable
+    //         renderLeftActions={LeftActions}
+    //         renderRightActions={RightActions}
+    //     >
+    //         <Animated.View style={[styles.cardTask, cardStyle]}>
+    //             <View style={styles.cardMenu}>
+    //                 <Animated.View style={[styles.buttonContainer, buttonStyle]}>
+
+    //                     <TouchableOpacity onPress={handleCheck}>
+
+    //                         <View style={checkList ? styles.buttomCheckTrue : styles.buttomCheck}>
+
+    //                             {checkList ? <Verificado width={15} height={15} style={styles.verificado} /> : null}
+
+    //                         </View>
+    //                     </TouchableOpacity>
+    //                 </Animated.View>
+    //             </View>
+
+    //             <View style={styles.cardBody}>
+    //                 <Text style={checkList ? styles.cardTextOK : styles.cardText} numberOfLines={1} ellipsizeMode='tail'>{name}
+    //                     <FeatherIcon icon='check-circle' size={36} color={'#000'} />
+    //                 </Text>
+    //             </View>
+
+    //             <Modal
+    //                 animationType="slide"
+    //                 transparent={true}
+    //                 visible={modalVisible}
+    //                 onRequestClose={() => {
+    //                     setModalVisible(false);
+    //                 }}
+    //             >
+
+    //                 <View style={styles.centeredView}>
+    //                     <View style={styles.modalView}>
+    //                         <Text style={styles.modalText}>Editar elemento</Text>
+    //                         <Text style={{ color: 'red' }}>Como estava: {name}</Text>
+
+    //                         <TextInput
+    //                             style={styles.input}
+    //                             placeholder="Digite o novo nome"
+    //                             onChangeText={(text) => setEditedValue(text)}
+    //                             value={editedValue}
+    //                         />
+
+    //                         <View style={styles.buttonContainer}>
+
+    //                             <TouchableOpacity
+    //                                 style={[styles.button, styles.confirmButton]}
+    //                                 onPress={handleSubmitEdit}
+    //                             >
+    //                                 <Text style={styles.buttonText}>Salvar</Text>
+    //                             </TouchableOpacity>
+    //                             <TouchableOpacity
+    //                                 style={[styles.button, styles.cancelButton]}
+    //                                 onPress={() => setModalVisible(false)}
+    //                             >
+    //                                 <Text style={styles.buttonText}>Cancelar</Text>
+    //                             </TouchableOpacity>
+    //                         </View>
+    //                     </View>
+    //                 </View>
+    //             </Modal>
+
+
+    //         </Animated.View>
+    //     </Swipeable>
+    // </GestureHandlerRootView>
 });
 
 export default Card4;

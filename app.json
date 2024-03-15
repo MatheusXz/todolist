@@ -15,14 +15,22 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "permissions": [
+        "CAMERA",
+        "MEDIA_LIBRARY"
+      ]
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/iconapp.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.matheuszx01.todolist"
+      "package": "com.matheuszx01.todolist",
+      "permissions": [
+        "CAMERA",
+        "MEDIA_LIBRARY"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
