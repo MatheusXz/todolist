@@ -16,10 +16,11 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [editedValue, setEditedValue] = useState(name);
     const [animation] = useState(new Animated.Value(0));
+    const [imageError, setImageError] = useState(null);
 
 
 
-    
+
 
     useEffect(() => {
         Animated.spring(animation, {
@@ -69,6 +70,11 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
         setModalVisible(false); // Fechar o modal após a submissão
     };
 
+    const handleImageLoadError = (error) => {
+        setImageError(error);
+        console.error("Erro ao carregar a imagem:", error);
+    };
+
 
 
 
@@ -77,14 +83,14 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
     return (
 
 
-
         <Animated.View style={[styles.container, cardStyle]}>
             <View style={styles.header}>
                 <Image
                     source={{ uri: img }}
-                    style={[styles.image,]}
-                    resizeMode='cover' />
-
+                    style={styles.image}
+                    resizeMode='cover'
+                    onError={handleImageLoadError}
+                />
 
             </View>
 

@@ -46,7 +46,59 @@ const Casamento = () => {
     const [imagemSelecionada, setImagemSelecionada] = useState(null);
     const [warningTextFoto, setShowWarningTextFoto] = useState(false);
     const [warningFoto, setShowWarningFoto] = useState(false);
-    const [image, setImage] = useState(null);
+    const warningOpacity = useRef(new Animated.Value(0)).current;
+    const [showWarning, setShowWarning] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+
+    const [buttonScale] = useState(new Animated.Value(1));
+
+    const [componenteSelecionado, setComponenteSelecionado] = useState('Card1');
+    const [novaTarefaNome, setNovaTarefaNome] = useState('');
+
+    const [tasksCard1, setTasksCard1] = useState([]);
+    const [tasksCard2, setTasksCard2] = useState([]);
+    const [tasksCard3, setTasksCard3] = useState([]);
+    const [tasksCard4, setTasksCard4] = useState([]);
+    const [tasksCard5, setTasksCard5] = useState([]);
+
+    useEffect(() => {
+        Animated.timing(warningOpacity, {
+            toValue: showWarning ? 1 : 0,
+            duration: 300,
+            useNativeDriver: true,
+        }).start();
+    }, [showWarning]);
+
+    // Função para carregar tarefas do AsyncStorage quando o componente for montado
+    useEffect(() => {
+        const loadTasks = async () => {
+            try {
+                const savedTasksCard1 = await AsyncStorage.getItem('tasksCard1');
+                if (savedTasksCard1 !== null) {
+                    setTasksCard1(JSON.parse(savedTasksCard1));
+                }
+                const savedTasksCard2 = await AsyncStorage.getItem('tasksCard2');
+                if (savedTasksCard2 !== null) {
+                    setTasksCard2(JSON.parse(savedTasksCard2));
+                }
+                const savedTasksCard3 = await AsyncStorage.getItem('tasksCard3');
+                if (savedTasksCard3 !== null) {
+                    setTasksCard2(JSON.parse(savedTasksCard3));
+                }
+                const savedTasksCard4 = await AsyncStorage.getItem('tasksCard4');
+                if (savedTasksCard4 !== null) {
+                    setTasksCard2(JSON.parse(savedTasksCard4));
+                }
+                const savedTasksCard5 = await AsyncStorage.getItem('tasksCard5');
+                if (savedTasksCard5 !== null) {
+                    setTasksCard2(JSON.parse(savedTasksCard5));
+                }
+            } catch (error) {
+                console.error('Erro ao carregar tarefas:', error);
+            }
+        };
+        loadTasks();
+    }, []);
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -134,55 +186,6 @@ const Casamento = () => {
         }
     };
 
-    // Função para carregar a imagem da pasta DCIM
-
-
-
-    // const saveImage = async (uri) => {
-    //     try {
-    //         const asset = await MediaLibrary.createAssetAsync(uri);
-    //         const album = await MediaLibrary.getAlbumAsync('FOTOSREACT');
-
-    //         if (album === null) {
-    //             await MediaLibrary.createAlbumAsync('FOTOSREACT', asset, false);
-    //         } else {
-    //             await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-    //         }
-
-    //         console.log('Image saved to FOTOSREACT folder!');
-    //     } catch (error) {
-    //         console.error('Error saving image to FOTOSREACT folder:', error);
-    //     }
-    // };
-
-    // const saveImage = async (uri) => {
-    //     try {
-    //         // Define o diretório onde a imagem será salva (pode ser uma pasta específica do aplicativo)
-    //         const directory = FileSystem.documentDirectory + 'minhaPasta/';
-
-    //         // Garante que o diretório exista
-    //         await FileSystem.makeDirectoryAsync(directory, { intermediates: true });
-
-    //         // Gera um nome único para a imagem (pode usar a data atual, por exemplo)
-    //         const timestamp = new Date().getTime();
-    //         const fileName = `${timestamp}.jpg`;
-
-    //         // Monta o caminho completo do arquivo
-    //         const filePath = directory + fileName;
-
-    //         // Move a imagem para o diretório especificado
-    //         await FileSystem.moveAsync({
-    //             from: uri,
-    //             to: filePath,
-    //         });
-
-    //         console.log('Imagem salva em:', filePath);
-    //     } catch (error) {
-    //         console.error('Erro ao salvar imagem:', error);
-    //     }
-    // };
-
-
     const handleCloseModal = () => {
         setModalVisible(false);
         setModalVisibleAddFoto(false);
@@ -191,53 +194,6 @@ const Casamento = () => {
         setShowWarningFoto(false);
         setShowWarningTextFoto(false)
     };
-
-    // const handleAddTaskToCard4 = async () => {
-    //     if (!novaTarefaNome.trim()) {
-    //         setShowWarningTextFoto(true);
-    //         return;
-    //     }
-
-    //     // Verifica se a imagem foi selecionada
-    //     if (!imagemSelecionada) {
-    //         setShowWarningFoto(true)
-    //         return;
-    //     }
-
-
-
-    //     try {
-
-    //         addTaskToCard4(novaTarefaNome, caminhoImagemSalva);
-    //         console.log(caminhoImagemSalva);
-
-
-    //         // Fecha a modal após adicionar a tarefa
-    //         setModalVisibleAddFoto(false);
-    //         setImagemSelecionada(null)
-    //     } catch (error) {
-    //         console.error('Erro ao salvar a imagem:', error);
-    //     }
-    // };
-
-
-
-    const [modalVisible, setModalVisible] = useState(false);
-
-    const [buttonScale] = useState(new Animated.Value(1));
-
-    const [showWarning, setShowWarning] = useState(false);
-    const warningOpacity = useRef(new Animated.Value(0)).current;
-
-    const [componenteSelecionado, setComponenteSelecionado] = useState('Card1');
-
-    const [novaTarefaNome, setNovaTarefaNome] = useState('');
-
-    const [tasksCard1, setTasksCard1] = useState([]);
-    const [tasksCard2, setTasksCard2] = useState([]);
-    const [tasksCard3, setTasksCard3] = useState([]);
-    const [tasksCard4, setTasksCard4] = useState([]);
-    const [tasksCard5, setTasksCard5] = useState([]);
 
     const handleClearAll = async () => {
         // Limpa o estado de tarefas
@@ -260,9 +216,6 @@ const Casamento = () => {
             console.error('Erro ao limpar tarefas:', error);
         }
     };
-    const [columns, setColumns] = useState(2); // Estado para armazenar o número de colunas
-
-
 
     // Função para renderizar o componente correspondente ao card selecionado
     const renderizarComponente = () => {
@@ -319,45 +272,6 @@ const Casamento = () => {
                 return null;
         }
     };
-
-    useEffect(() => {
-        Animated.timing(warningOpacity, {
-            toValue: showWarning ? 1 : 0,
-            duration: 300,
-            useNativeDriver: true,
-        }).start();
-    }, [showWarning]);
-
-    // Função para carregar tarefas do AsyncStorage quando o componente for montado
-    useEffect(() => {
-        const loadTasks = async () => {
-            try {
-                const savedTasksCard1 = await AsyncStorage.getItem('tasksCard1');
-                if (savedTasksCard1 !== null) {
-                    setTasksCard1(JSON.parse(savedTasksCard1));
-                }
-                const savedTasksCard2 = await AsyncStorage.getItem('tasksCard2');
-                if (savedTasksCard2 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard2));
-                }
-                const savedTasksCard3 = await AsyncStorage.getItem('tasksCard3');
-                if (savedTasksCard3 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard3));
-                }
-                const savedTasksCard4 = await AsyncStorage.getItem('tasksCard4');
-                if (savedTasksCard4 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard4));
-                }
-                const savedTasksCard5 = await AsyncStorage.getItem('tasksCard5');
-                if (savedTasksCard5 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard5));
-                }
-            } catch (error) {
-                console.error('Erro ao carregar tarefas:', error);
-            }
-        };
-        loadTasks();
-    }, []);
 
     // Função para adicionar uma nova tarefa
     const addTask = async (newTask, card) => {
@@ -428,6 +342,7 @@ const Casamento = () => {
         }
     };
 
+    // Função para adicionar uma nova tarefa ao Card4
     const addTaskToCard4 = async (newTask, imageUri) => {
         try {
             const task = {
@@ -522,6 +437,8 @@ const Casamento = () => {
             console.error('Erro ao marcar tarefa como completa:', error);
         }
     };
+
+    // Função para editar uma tarefa
     const setEditar = async (taskId, valorNovo) => {
         try {
             if (componenteSelecionado === 'Card1') {
@@ -618,10 +535,8 @@ const Casamento = () => {
 
 
                 </ScrollView>
+
                 {renderizarComponente()}
-
-
-
             </View>
 
             {showWarning && <Text>O nome da tarefa não pode estar vazio.</Text>}
@@ -754,8 +669,6 @@ const Casamento = () => {
                     </View>
                 </View>
             </Modal>
-
-
 
         </KeyboardAvoidingView >
     );
