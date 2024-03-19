@@ -66,7 +66,6 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
     const handleSubmitEdit = () => {
         // Aqui você pode lidar com a submissão da edição, por exemplo:
         editar(id, editedValue)
-        // console.log(`Valor editado: ${editedValue}`);
         setModalVisible(false); // Fechar o modal após a submissão
     };
 
@@ -91,20 +90,15 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
                     resizeMode='cover'
                     onError={handleImageLoadError}
                 />
+                {/* {console.log(img)} */}
 
             </View>
 
             <View style={styles.body}>
-                <Text>
-                    {img}
-                </Text>
-                <Text style={styles.textName} numberOfLines={2} ellipsizeMode="tail">
-                    {name} - {id}
+                <Text style={styles.textName} numberOfLines={3} ellipsizeMode="tail">
+                    {name}
                 </Text>
             </View>
-            {console.log(img)}
-            {console.log(id)}
-            {console.log(name)}
             <View style={styles.buttons}>
                 <TouchableOpacity style={styles.btnEdit} onPress={handleEdit}>
                     <Text style={styles.textBtnEdit} >
@@ -125,17 +119,9 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
                     setModalVisible(false);
                 }}
             >
-
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <Text style={styles.modalText}>Editar elemento</Text>
-
-                        <Text style={{ color: '#ffffff', }}>
-                            foto
-                        </Text>
-                        {/* <Image source={{ uri: image }} style={{ width: '100%', height: '50%', borderWidth: 1, borderColor: '#454545', borderRadius: 20, marginBottom: 20 }} /> */}
-
-
                         <Text style={{ color: '#ffffff', }}>
                             nome do item
                         </Text>
@@ -145,22 +131,13 @@ const Card4 = ({ id, name, removeTask, editar, img }) => {
                             onChangeText={(text) => setEditedValue(text)}
                             value={editedValue}
                         />
-
                         <View style={styles.buttonContainer}>
-
                             <TouchableOpacity
-                                style={[styles.button, styles.confirmButton]}
-                            // onPress={pickImage}
-                            >
-
-                                <Text style={styles.buttonText}>Colocar foto</Text>
-                            </TouchableOpacity>
-                            {/* <TouchableOpacity
                                 style={[styles.button, styles.confirmButton]}
                                 onPress={handleSubmitEdit}
                             >
                                 <Text style={styles.buttonText}>Salvar</Text>
-                            </TouchableOpacity> */}
+                            </TouchableOpacity>
                             <TouchableOpacity
                                 style={[styles.button, styles.cancelButton]}
                                 onPress={() => setModalVisible(false)}
@@ -183,7 +160,7 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: '#1E1E1E',
         borderRadius: 20,
-        height: 210,
+        height: 300,
         width: '100%',
         alignItems: 'center',
         elevation: 8
@@ -206,7 +183,7 @@ const styles = StyleSheet.create({
     image: {
         justifyContent: 'center',
         width: '100%',
-        height: 100,
+        height: 172,
         borderRadius: 10,
     },
     textName: {
@@ -217,7 +194,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         width: '85%',
-        height: 50,
+        height: 65,
         color: '#fff',
     },
     buttons: {

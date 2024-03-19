@@ -102,7 +102,6 @@ const Card5 = ({ id, name, removeTask, completo, setCompleted, editar }) => {
     const handleSubmitEdit = () => {
         // Aqui você pode lidar com a submissão da edição, por exemplo:
         editar(id, editedValue)
-        console.log(`Valor editado: ${editedValue}`);
         setModalVisible(false); // Fechar o modal após a submissão
     };
     return (

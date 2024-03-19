@@ -16,13 +16,8 @@ import {
     Alert,
 } from 'react-native';
 
-
-
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
-import { requestPermissionsAsync, createAssetAsync } from 'expo-media-library';
-
-
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 // SVG
@@ -83,18 +78,21 @@ const Casamento = () => {
                 }
                 const savedTasksCard3 = await AsyncStorage.getItem('tasksCard3');
                 if (savedTasksCard3 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard3));
+                    setTasksCard3(JSON.parse(savedTasksCard3));
                 }
                 const savedTasksCard4 = await AsyncStorage.getItem('tasksCard4');
                 if (savedTasksCard4 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard4));
+                    setTasksCard4(JSON.parse(savedTasksCard4));
                 }
                 const savedTasksCard5 = await AsyncStorage.getItem('tasksCard5');
                 if (savedTasksCard5 !== null) {
-                    setTasksCard2(JSON.parse(savedTasksCard5));
+                    setTasksCard5(JSON.parse(savedTasksCard5));
                 }
             } catch (error) {
+
                 console.error('Erro ao carregar tarefas:', error);
+                //alert
+
             }
         };
         loadTasks();
@@ -102,33 +100,22 @@ const Casamento = () => {
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
-
         if (Platform.OS !== 'android') {
             return true;
         }
-
-        const { status } = await MediaLibrary.requestPermissionsAsync();
-        if (status !== 'granted') {
-            Alert.alert('Permissão necessária', 'Por favor, conceda permissão para acessar a mídia armazenada.');
-            return false;
-        } else {
-            setShowWarningFoto(false)
-            let result = await ImagePicker.launchImageLibraryAsync({
-                mediaTypes: ImagePicker.MediaTypeOptions.Images,
-                allowsEditing: true,
-                aspect: [4, 3],
-                quality: 1,
-            });
-
-            // console.log(result);
+        setShowWarningFoto(false)
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            base64: true,
+            aspect: [3, 4],
+            quality: 1,
+        });
+        if (!result.canceled) {
+            setImagemSelecionada(result.assets[0].uri);
             // console.log(result.assets[0].uri);
-
-            if (!result.canceled) {
-                setImagemSelecionada(result.assets[0].uri);
-            }
-            return true;
         }
-
+        return true;
     };
 
     const handleAddTaskToCard4 = async () => {
@@ -136,53 +123,18 @@ const Casamento = () => {
             setShowWarningTextFoto(true);
             return;
         }
-
-        // Verifica se a imagem foi selecionada
         if (!imagemSelecionada) {
             setShowWarningFoto(true)
             return;
         }
-
         try {
-            // Salva a imagem e obtém o caminho da imagem salva
-            const caminhoImagemSalva = await saveImage(imagemSelecionada);
-            console.log('Caminhdo da Imagem 001 - > ', caminhoImagemSalva)
-            // Adiciona a tarefa com o nome e o caminho da imagem
-            addTaskToCard4(novaTarefaNome, caminhoImagemSalva);
-
+            addTaskToCard4(novaTarefaNome, imagemSelecionada);
+            // console.log(imagemSelecionada);
             // Fecha a modal após adicionar a tarefa
             setModalVisibleAddFoto(false);
             setImagemSelecionada(null);
         } catch (error) {
             console.error('Erro ao salvar a imagem:', error);
-        }
-    };
-
-    const saveImage = async (uri) => {
-        try {
-            const permission = await requestPermissionsAsync();
-
-            if (permission.status === 'granted') {
-                try {
-                    const asset = await MediaLibrary.createAssetAsync(uri);
-                    const album = await MediaLibrary.getAlbumAsync('DCIM');
-
-                    if (album === null) {
-                        await MediaLibrary.createAlbumAsync('DCIM', asset, false);
-                    } else {
-                        await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
-                    }
-
-                    console.log('Image saved to DCIM folder! ' + asset.uri);
-                    return asset.uri;
-                } catch (error) {
-                    console.error('Error saving image to DCIM folder:', error);
-                }
-            }
-
-        } catch (error) {
-            console.error('Erro ao salvar imagem:', error);
-            throw error;
         }
     };
 
@@ -204,7 +156,6 @@ const Casamento = () => {
         setTasksCard5([]);
         // Fecha o modal
         setModalVisible(false);
-
         // Limpa o AsyncStorage
         try {
             await AsyncStorage.removeItem('tasksCard1');
@@ -213,7 +164,7 @@ const Casamento = () => {
             await AsyncStorage.removeItem('tasksCard4');
             await AsyncStorage.removeItem('tasksCard5');
         } catch (error) {
-            console.error('Erro ao limpar tarefas:', error);
+            Alert.alert('Erro ao limpar tarefas', 'Erro ao limpar tarefas');
         }
     };
 
@@ -250,19 +201,14 @@ const Casamento = () => {
                                         removeTask={() => removeTask(item.id)}
                                         img={item.img}
                                     />
-                                    {/* <Text>{item.img}</Text> */}
                                 </View>
-
                             ))}
+                            {console.log(tasksCard4)}
+
                         </View>
                     </ScrollView>
 
                 );
-
-            // <FlatList
-            //     data={tasksCard4}
-            //     renderItem={({ item }) => (<Card4 id={item.id} name={item.name} completo={item.completed} setCompleted={setCompleted} editar={setEditar} removeTask={() => removeTask(item.id)} />)}
-            //     keyExtractor={item => item.id.toString()} />;
             case 'Card5':
                 return <FlatList
                     data={tasksCard5}
@@ -291,7 +237,6 @@ const Casamento = () => {
 
         // Verifica se o nome da tarefa está vazio
         if (newTask.trim() === '') {
-
             setShowWarning(true);
             return;
         } else {
@@ -321,9 +266,6 @@ const Casamento = () => {
                         break;
                     case 'Card4':
                         { setModalVisibleAddFoto(true) }
-                        // updatedTasks = [...tasksCard4, task];
-                        // setTasksCard4(updatedTasks);
-                        // await AsyncStorage.setItem('tasksCard4', JSON.stringify(updatedTasks));
                         break;
                     case 'Card5':
                         updatedTasks = [...tasksCard5, task];
@@ -334,7 +276,6 @@ const Casamento = () => {
                         break;
                 }
                 setNovaTarefaNome('');
-
                 setShowWarning(false);
             } catch (error) {
                 console.error('Erro ao adicionar tarefa:', error);
@@ -351,16 +292,10 @@ const Casamento = () => {
                 completed: 0,
                 img: imageUri, // Armazena a URI da imagem junto com a tarefa
             };
-            // console.log(task);
-
-
             const updatedTasks = [...tasksCard4, task];
             setTasksCard4(updatedTasks);
             await AsyncStorage.setItem('tasksCard4', JSON.stringify(updatedTasks));
-
-            // console.log(updatedTasks);
             setNovaTarefaNome('');
-
             setShowWarning(false);
             setShowWarningTextFoto(false);
         } catch (error) {
@@ -888,7 +823,6 @@ const styles = StyleSheet.create({
     cancelButtonAddFoto: {
         backgroundColor: 'red',
     },
-
     inputAddFoto: {
         borderWidth: 1,
         borderColor: '#ccc',
@@ -900,10 +834,6 @@ const styles = StyleSheet.create({
         color: '#000',
         marginTop: 10,
     }
-
-
-
-
 });
 
 export default Casamento;

@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import Profile from '../../assets/svg/profile.svg';
-
-
 
 export default function Header() {
 
@@ -60,9 +57,9 @@ export default function Header() {
 const styles = StyleSheet.create({
     header: {
         marginHorizontal: -20,
-        height: 100,
+        height: 140,
         backgroundColor: '#1E1E1E',
-        
+        paddingTop: 30,        
     },
     headerContext: {
         marginHorizontal: 40,
